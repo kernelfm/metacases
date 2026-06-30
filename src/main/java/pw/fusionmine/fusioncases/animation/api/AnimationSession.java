@@ -41,7 +41,11 @@ public abstract class AnimationSession {
 
     public void dispatchReward(RewardModel reward) {
         for (String cmd : reward.getCommands()) {
-            String s = cmd.replace("%username%", player.getName()).replace("%group%", reward.getId());
+            String s = cmd
+                    .replace("%username%", player.getName())
+                    .replace("%group%", reward.getId()
+                    .replace("%displayname%", reward.getDisplayName()
+            ));
             if (s.startsWith("[command] ")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s.substring(10));
             } else if (s.startsWith("[broadcast] ")) {
