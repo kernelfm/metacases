@@ -68,6 +68,7 @@ messages:
 
   # GUI messages (hardcoded strings in the case GUI)
   gui-history-player-color: "&a"
-  gui-history-won: "&7Won: "
+  gui-history-won:
+    - "&7Won: %reward%"
   gui-history-empty: "&7No history"
   gui-case-lore: "&7Keys: &f%keys%"

@@ -401,11 +401,16 @@ public class CaseManager {
                                 stack = ItemUtil.getItem(entry.getRewardMaterial(), Material.PAPER);
                                 ItemMeta meta = stack.getItemMeta();
                                 if (meta != null) {
-                                    String playerColor = this.plugin.getMsg("gui-history-player-color");
+                                    List<String> wonLore = new ArrayList<>();
+                                    for(String s : plugin.getLangManager().getStringList("gui-history-won")) {
+                                        s = s
+                                        .replace("%time%", entry.getTime())
+                                        .replace("%reward%", entry.getRewardDisplayName());
+                                        wonLore.add(ColorUtil.color(s));
+                                    }
+                                    String playerColor = this.plugin.getLangManager().get("gui-history-player-color");
                                     meta.setDisplayName(ColorUtil.color(playerColor + entry.getUsername()));
-                                    String wonLabel = this.plugin.getMsg("gui-history-won")
-                                            .replace("%time%", entry.getTime());
-                                    meta.setLore(Collections.singletonList(ColorUtil.color(wonLabel + entry.getRewardDisplayName())));
+                                    meta.setLore(wonLore);
                                     stack.setItemMeta(meta);
                                 }
                             } else {

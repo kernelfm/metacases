@@ -68,6 +68,7 @@ messages:
 
   # Строки GUI (захардкоженные в интерфейсе кейса)
   gui-history-player-color: "&a"
-  gui-history-won: "&7Выбил: "
+  gui-history-won:
+    - "&7Выбил: %reward%"
   gui-history-empty: "&7Нет истории"
   gui-case-lore: "&7Ключей: &f%keys%"
