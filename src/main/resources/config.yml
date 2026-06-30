@@ -1,0 +1,17 @@
+locale: ru
+
+prefix: "&#FF8C00&lFusionCases &7» &f"
+
+permissions:
+  use: "fusioncases.use"
+  admin: "fusioncases.admin"
+
+fancy-holograms:
+  case:
+    scale: 0.8
+    shadow: true
+  win:
+    text-scale: 0.8
+    text-shadow: true
+    item-scale: 0.5
+    item-y-offset: -0.6

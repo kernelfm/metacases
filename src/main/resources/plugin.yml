@@ -1,0 +1,12 @@
+name: FusionCases
+version: '${version}'
+main: pw.fusionmine.fusioncases.FusionCases
+api-version: '1.21'
+authors:
+  - "shk3d"
+  - "Skr4tch (TG: skr4tch)"
+softdepend: [FancyHolograms]
+commands:
+  fusioncases:
+    description: Main plugin command
+    permission: fusioncases.use
