@@ -14,4 +14,4 @@ fancy-holograms:
     text-scale: 0.8
     text-shadow: true
     item-scale: 0.5
-    item-y-offset: -0.6
+    item-y-offset: -0.1

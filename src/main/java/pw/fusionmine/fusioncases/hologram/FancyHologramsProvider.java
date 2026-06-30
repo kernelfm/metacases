@@ -3,6 +3,7 @@ package pw.fusionmine.fusioncases.hologram;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 import de.oliver.fancyholograms.api.FancyHologramsPlugin;
 import de.oliver.fancyholograms.api.HologramManager;
@@ -17,6 +18,7 @@ import org.bukkit.entity.Display;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.joml.Vector3f;
+import pw.fusionmine.fusioncases.utility.ColorUtil;
 import pw.fusionmine.fusioncases.utility.ItemUtil;
 
 public class FancyHologramsProvider implements HologramProvider {
@@ -36,7 +38,6 @@ public class FancyHologramsProvider implements HologramProvider {
             boolean configShadow;
             removeSingle(name);
             TextHologramData data = new TextHologramData(name, location);
-
             data.setText(lines);
             data.setPersistent(false);
             data.setBillboard(Display.Billboard.VERTICAL);
@@ -72,7 +73,7 @@ public class FancyHologramsProvider implements HologramProvider {
             ItemStack item = ItemUtil.getItem(material, Material.CHEST);
 
             double configItemScale = this.plugin.getConfig().getDouble("fancy-holograms.win.item-scale", 0.5D);
-            double configItemYOffset = this.plugin.getConfig().getDouble("fancy-holograms.win.item-y-offset", -0.6D);
+            double configItemYOffset = this.plugin.getConfig().getDouble("fancy-holograms.win.item-y-offset", -0.1D);
             Location itemLoc = loc.clone().add(0.0D, configItemYOffset, 0.0D);
 
             ItemHologramData itemData = new ItemHologramData(itemName, itemLoc);
