@@ -42,7 +42,6 @@ public class FancyHologramsProvider implements HologramProvider {
             TextHologramData data = new TextHologramData(name, location);
             List<String> coloredLines = lines.stream()
                     .map(line -> {
-                        if (line == null) return "";
                         String legacyColored = ColorUtil.color(line);
                         return MiniMessage.miniMessage()
                                 .serialize(LegacyComponentSerializer.legacySection().deserialize(legacyColored));

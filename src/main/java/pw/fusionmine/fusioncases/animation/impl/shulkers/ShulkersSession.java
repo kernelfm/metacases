@@ -215,7 +215,7 @@ class ShulkersSession extends AnimationSession {
         loc.getWorld().spawnParticle(this.ac.explodeParticle, loc, this.ac.explodeParticleCount, 0.5D, 0.5D, 0.5D, this.ac.explodeParticleSpeed);
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
-            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
+            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getDisplayName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
             dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());

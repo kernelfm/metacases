@@ -237,7 +237,7 @@ class BeesSession extends AnimationSession implements Listener {
         clickedLoc.getWorld().spawnParticle(this.ac.clickParticle, clickedLoc, this.ac.clickParticleCount, 0.2D, 0.2D, 0.2D, this.ac.clickParticleSpeed);
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
-            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
+            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getDisplayName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
             dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());

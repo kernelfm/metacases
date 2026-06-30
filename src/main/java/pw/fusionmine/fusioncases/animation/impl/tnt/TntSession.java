@@ -211,7 +211,7 @@ class TntSession extends AnimationSession {
         b.getWorld().spawnParticle(this.ac.revealParticle, b.getLocation().clone().add(0.5D, 0.5D, 0.5D), this.ac.revealParticleCount, 0.3D, 0.3D, 0.3D, this.ac.revealParticleSpeed);
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
-            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
+            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getDisplayName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
             dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());

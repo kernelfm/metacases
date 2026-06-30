@@ -165,7 +165,7 @@ class ChestsSession extends AnimationSession {
         b.getWorld().spawnParticle(this.ac.clickParticle, b.getLocation().clone().add(0.5D, 0.5D, 0.5D), this.ac.clickParticleCount, 0.3D, 0.3D, 0.3D, (double)this.ac.clickParticleSpeed);
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
-            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
+            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getDisplayName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
             dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());

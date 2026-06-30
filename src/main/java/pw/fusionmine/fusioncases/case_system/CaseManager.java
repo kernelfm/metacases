@@ -28,7 +28,7 @@ public class CaseManager {
     private final FusionCases plugin;
     private final Map<Location, String> caseBlocks = new HashMap<>();
     private final Map<UUID, Map<String, Integer>> playerKeys = new HashMap<>();
-    private final Map<String, List<HistoryEntry>> history = new HashMap<>();
+    private List<HistoryEntry> history = new ArrayList<>();
     private final Map<Location, String> blockHolos = new HashMap<>();
     private final Set<String> disabledCases = new HashSet<>();
 
@@ -61,7 +61,7 @@ public class CaseManager {
         YamlConfiguration cfg = new YamlConfiguration();
         cfg.set("display-name", "&aDefault Case");
         cfg.set("material", "BASE64-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzczYjM1NWM5MWJjYzQyMjA4OWQwM2Y1NDY5ODdlMWE3MWVlNzc1OWY0YzdkNTdlZDU5ODgyY2U4YmM2MTM3NCJ9fX0=");
-        cfg.set("animation", "chests");
+        cfg.set("animation", "random");
 
         ConfigurationSection rewards = cfg.createSection("rewards");
 
@@ -180,22 +180,17 @@ public class CaseManager {
 
     public void loadHistory() {
         this.history.clear();
-        this.history.putAll(this.db.loadAllHistory());
-    }
-
-    public List<HistoryEntry> getHistory(String caseName) {
-        return this.history.getOrDefault(caseName.toLowerCase(), new ArrayList<>());
+        this.history = this.db.loadAllHistory();
     }
 
     public void addHistoryEntry(String caseName, String username, String rewardName, String rewardMat) {
-        List<HistoryEntry> list = this.history.computeIfAbsent(caseName.toLowerCase(), k -> new ArrayList());
         long ts = System.currentTimeMillis();
-        list.add(0, new HistoryEntry(username, rewardName, rewardMat, new Timestamp(ts)));
-        if (list.size() > 9) list.remove(list.size() - 1);
+        history.add(0, new HistoryEntry(caseName, username, rewardName, rewardMat, new Timestamp(ts)));
+        if (history.size() > 9) history.remove(history.size() - 1);
 
         Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
             this.db.addHistory(caseName, username, rewardName, rewardMat, ts);
-            this.db.trimHistory(caseName);
+            this.db.trimHistory();
         });
     }
 
@@ -395,9 +390,8 @@ public class CaseManager {
                     } else if (type != null && type.startsWith("history-")) {
                         try {
                             int idx = Integer.parseInt(type.substring(8)) - 1;
-                            List<HistoryEntry> hist = getHistory(cm.getName());
-                            if (idx >= 0 && idx < hist.size()) {
-                                HistoryEntry entry = hist.get(idx);
+                            if (idx >= 0 && idx < history.size()) {
+                                HistoryEntry entry = history.get(idx);
                                 stack = ItemUtil.getItem(entry.getRewardMaterial(), Material.PAPER);
                                 ItemMeta meta = stack.getItemMeta();
                                 if (meta != null) {

@@ -199,19 +199,15 @@ public class DatabaseManager {
 
     }
 
-    public Map<String, List<HistoryEntry>> loadAllHistory() {
-        Map<String, List<HistoryEntry>> map = new HashMap<>();
+    public List<HistoryEntry> loadAllHistory() {
+        List<HistoryEntry> list = new ArrayList<>();
         try {
             Statement s = this.conn.createStatement();
             try {
-                ResultSet rs = s.executeQuery("SELECT * FROM opening_history ORDER BY timestamp DESC LIMIT 9;");
+                ResultSet rs = s.executeQuery("SELECT * FROM opening_history ORDER BY timestamp DESC");
                 try {
-                    while (rs.next()) {
-                        String cn = rs.getString("case_name").toLowerCase();
-                        List<HistoryEntry> list = map.computeIfAbsent(cn, k -> new ArrayList<>());
-                        if (list.size() < 9)
-                            list.add(new HistoryEntry(rs.getString("username"), rs.getString("reward_display"), rs.getString("reward_material"), rs.getTimestamp("timestamp")));
-                    }
+                    while (rs.next())
+                        list.add(new HistoryEntry(rs.getString("case_name"), rs.getString("username"), rs.getString("reward_display"), rs.getString("reward_material"), rs.getTimestamp("timestamp")));
                     if (rs != null) rs.close();
                 } catch (Throwable throwable) {
                     if (rs != null) try {
@@ -234,14 +230,14 @@ public class DatabaseManager {
             e.printStackTrace();
         }
 
-        return map;
+        return list;
     }
 
     public void addHistory(String caseName, String username, String rewardDisplay, String rewardMaterial, long ts) {
         try {
             PreparedStatement ps = this.conn.prepareStatement("INSERT INTO opening_history (case_name, username, reward_display, reward_material, timestamp) VALUES (?, ?, ?, ?, ?)");
             try {
-                ps.setString(1, caseName.toLowerCase());
+                ps.setString(1, caseName);
                 ps.setString(2, username);
                 ps.setString(3, rewardDisplay);
                 ps.setString(4, rewardMaterial);
@@ -261,13 +257,10 @@ public class DatabaseManager {
         }
     }
 
-    public void trimHistory(String caseName) {
+    public void trimHistory() {
         try {
-            PreparedStatement ps = this.conn.prepareStatement("DELETE FROM opening_history WHERE case_name = ? AND id NOT IN (SELECT id FROM opening_history WHERE case_name = ? ORDER BY timestamp DESC LIMIT 9)");
-
+            PreparedStatement ps = this.conn.prepareStatement("DELETE FROM opening_history WHERE id NOT IN (SELECT id FROM opening_history ORDER BY timestamp DESC LIMIT 9)");
             try {
-                ps.setString(1, caseName.toLowerCase());
-                ps.setString(2, caseName.toLowerCase());
                 ps.executeUpdate();
                 if (ps != null) ps.close();
             } catch (Throwable throwable) {

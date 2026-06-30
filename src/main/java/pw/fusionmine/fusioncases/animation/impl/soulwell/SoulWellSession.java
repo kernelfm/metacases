@@ -136,11 +136,11 @@ class SoulWellSession extends AnimationSession {
         loc.getWorld().spawnParticle(this.ac.clickParticle, loc, this.ac.clickParticleCount, 0.2D, 0.2D, 0.2D, (double)this.ac.clickParticleSpeed);
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
-            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
+            this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getDisplayName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
             dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());
-                String hn = "lostcase_" + var10000 + "_" + System.currentTimeMillis();
+                String hn = "fusioncase_" + var10000 + "_" + System.currentTimeMillis();
                 this.spawnWinHolo(hn, loc, reward);
             }
         }
@@ -159,7 +159,7 @@ class SoulWellSession extends AnimationSession {
                             RewardModel sim = SoulWellSession.this.caseModel.getRandomReward();
                             if (sim != null && HologramBridge.isAvailable()) {
                                 String var10000 = String.valueOf(SoulWellSession.this.player.getUniqueId());
-                                String hn = "lostcase_sim_" + var10000 + "_" + sLoc.getBlockX() + "_" + sLoc.getBlockZ() + "_" + System.currentTimeMillis();
+                                String hn = "fusioncase_sim_" + var10000 + "_" + sLoc.getBlockX() + "_" + sLoc.getBlockZ() + "_" + System.currentTimeMillis();
                                 SoulWellSession.this.spawnWinHolo(hn, sLoc, sim);
                             }
                         }
