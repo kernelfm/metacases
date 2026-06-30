@@ -10,6 +10,8 @@ import de.oliver.fancyholograms.api.HologramManager;
 import de.oliver.fancyholograms.api.data.ItemHologramData;
 import de.oliver.fancyholograms.api.data.TextHologramData;
 import de.oliver.fancyholograms.api.hologram.Hologram;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -38,7 +40,15 @@ public class FancyHologramsProvider implements HologramProvider {
             boolean configShadow;
             removeSingle(name);
             TextHologramData data = new TextHologramData(name, location);
-            data.setText(lines);
+            List<String> coloredLines = lines.stream()
+                    .map(line -> {
+                        if (line == null) return "";
+                        String legacyColored = ColorUtil.color(line);
+                        return MiniMessage.miniMessage()
+                                .serialize(LegacyComponentSerializer.legacySection().deserialize(legacyColored));
+                    })
+                    .collect(Collectors.toList());
+            data.setText(coloredLines);
             data.setPersistent(false);
             data.setBillboard(Display.Billboard.VERTICAL);
             data.setBackground(Color.fromARGB(0, 0, 0, 0));
