@@ -1,12 +1,9 @@
 package pw.fusionmine.fusioncases.animation.impl.soulwell;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,7 +29,6 @@ class SoulWellSession extends AnimationSession {
     private BukkitTask cleanupTask;
     private BukkitTask revealOtherTask;
     private int ticks = 0;
-    private SoulWellSession.State state;
 
     public SoulWellSession(FusionCases plugin, Player p, Location caseLoc, CaseModel caseModel, ConfigurationSection config) {
         super(plugin, p, caseLoc, caseModel, new AnimationConfig(plugin, config, AnimationConfig.Type.SOULWELL), State.WAITING);
@@ -44,7 +40,7 @@ class SoulWellSession extends AnimationSession {
         for(int i = 0; i < 4; ++i) {
             double angle = (double)i * 2.0D * 3.141592653589793D / 4.0D;
             Location spawnLoc = center.clone().add(1.5D * Math.cos(angle), 1.0D, 1.5D * Math.sin(angle));
-            ArmorStand stand = (ArmorStand)spawnLoc.getWorld().spawn(spawnLoc, ArmorStand.class);
+            ArmorStand stand = spawnLoc.getWorld().spawn(spawnLoc, ArmorStand.class);
             stand.setInvisible(true);
             stand.setBasePlate(false);
             stand.setArms(false);
@@ -74,7 +70,7 @@ class SoulWellSession extends AnimationSession {
                     Location cent = SoulWellSession.this.caseLoc.clone().add(0.5D, SoulWellSession.this.ac.yOffset, 0.5D);
 
                     for(int i = 0; i < SoulWellSession.this.stands.size(); ++i) {
-                        ArmorStand stand = (ArmorStand)SoulWellSession.this.stands.get(i);
+                        ArmorStand stand = SoulWellSession.this.stands.get(i);
                         if (stand.isValid()) {
                             double angle = (double)SoulWellSession.this.ticks * 0.06D + (double)i * 2.0D * 3.141592653589793D / 4.0D;
                             double x = cent.getX() + 1.5D * Math.cos(angle);
@@ -94,7 +90,7 @@ class SoulWellSession extends AnimationSession {
         this.timeoutTask = (new BukkitRunnable() {
             public void run() {
                 if (SoulWellSession.this.state == SoulWellSession.State.WAITING && !SoulWellSession.this.stands.isEmpty()) {
-                    SoulWellSession.this.reveal((ArmorStand)SoulWellSession.this.stands.get(ThreadLocalRandom.current().nextInt(SoulWellSession.this.stands.size())));
+                    SoulWellSession.this.reveal(SoulWellSession.this.stands.get(ThreadLocalRandom.current().nextInt(SoulWellSession.this.stands.size())));
                 }
 
             }
@@ -141,10 +137,10 @@ class SoulWellSession extends AnimationSession {
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
             this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
-            dispatchReward(player, reward);
+            dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());
-                String hn = "fusioncase_" + var10000 + "_" + System.currentTimeMillis();
+                String hn = "lostcase_" + var10000 + "_" + System.currentTimeMillis();
                 this.spawnWinHolo(hn, loc, reward);
             }
         }
@@ -163,7 +159,7 @@ class SoulWellSession extends AnimationSession {
                             RewardModel sim = SoulWellSession.this.caseModel.getRandomReward();
                             if (sim != null && HologramBridge.isAvailable()) {
                                 String var10000 = String.valueOf(SoulWellSession.this.player.getUniqueId());
-                                String hn = "fusioncase_sim_" + var10000 + "_" + sLoc.getBlockX() + "_" + sLoc.getBlockZ() + "_" + System.currentTimeMillis();
+                                String hn = "lostcase_sim_" + var10000 + "_" + sLoc.getBlockX() + "_" + sLoc.getBlockZ() + "_" + System.currentTimeMillis();
                                 SoulWellSession.this.spawnWinHolo(hn, sLoc, sim);
                             }
                         }

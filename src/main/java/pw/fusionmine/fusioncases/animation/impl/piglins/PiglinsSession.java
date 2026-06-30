@@ -124,7 +124,7 @@ class PiglinsSession extends AnimationSession {
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
             this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
-            dispatchReward(player, reward);
+            dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());
                 String hn = "fusioncase_" + var10000 + "_" + System.currentTimeMillis();

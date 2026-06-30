@@ -1,8 +1,6 @@
 package pw.fusionmine.fusioncases.animation.impl.shulkers;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -35,7 +33,6 @@ class ShulkersSession extends AnimationSession {
     private BukkitTask cleanupTask;
     private BukkitTask revealOtherTask;
     private int placeIdx = 0;
-    private ShulkersSession.State state;
     private static final int[][] OFFSETS = new int[][]{{0, -3}, {2, -2}, {3, 0}, {2, 2}, {0, 3}, {-2, 2}, {-3, 0}, {-2, -2}};
 
     public ShulkersSession(FusionCases plugin, Player p, Location caseLoc, CaseModel caseModel, ConfigurationSection config) {
@@ -105,7 +102,7 @@ class ShulkersSession extends AnimationSession {
         Location center = this.caseLoc.clone().add(0.5D, 0.0D, 0.5D);
         Vector dir = center.toVector().subtract(spawnLoc.toVector());
         spawnLoc.setDirection(dir);
-        Shulker shulker = (Shulker)spawnLoc.getWorld().spawn(spawnLoc, Shulker.class);
+        Shulker shulker = spawnLoc.getWorld().spawn(spawnLoc, Shulker.class);
         shulker.setAI(false);
         shulker.setCanPickupItems(false);
         DyeColor[] colors = DyeColor.values();
@@ -219,10 +216,11 @@ class ShulkersSession extends AnimationSession {
         RewardModel reward = this.caseModel.getRandomReward();
         if (reward != null) {
             this.plugin.getCaseManager().addHistoryEntry(this.caseModel.getName(), this.player.getName(), reward.getDisplayName(), reward.getMaterial());
-            dispatchReward(player, reward);
+            dispatchReward(reward);
             if (HologramBridge.isAvailable()) {
                 String var10000 = String.valueOf(this.player.getUniqueId());
                 String hn = "fusioncase_" + var10000 + "_" + System.currentTimeMillis();
+                loc.setPitch(0);
                 this.spawnWinHolo(hn, loc.clone().add(0.0D, 0.5D, 0.0D), reward);
             }
         }
@@ -243,7 +241,7 @@ class ShulkersSession extends AnimationSession {
                             if (sim != null && HologramBridge.isAvailable()) {
                                 String var10000 = String.valueOf(ShulkersSession.this.player.getUniqueId());
                                 String hn = "fusioncase_sim_" + var10000 + "_" + sLoc.getBlockX() + "_" + sLoc.getBlockZ() + "_" + System.currentTimeMillis();
-                                ShulkersSession.this.spawnWinHolo(hn, sLoc.clone().add(0.0D, 1.5D, 0.0D), sim);
+                                ShulkersSession.this.spawnWinHolo(hn, sLoc.clone().add(0.0D, 1.2D, 0.0D), sim);
                             }
                         }
                     }

@@ -39,7 +39,7 @@ public abstract class AnimationSession {
 
     public abstract void stop();
 
-    public void dispatchReward(Player player, RewardModel reward) {
+    public void dispatchReward(RewardModel reward) {
         for (String cmd : reward.getCommands()) {
             String s = cmd.replace("%username%", player.getName()).replace("%group%", reward.getId());
             if (s.startsWith("[command] ")) {
