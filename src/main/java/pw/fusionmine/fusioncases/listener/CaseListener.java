@@ -1,4 +1,5 @@
 package pw.fusionmine.fusioncases.listener;
+
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -9,8 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -29,6 +28,7 @@ import pw.fusionmine.fusioncases.FusionCases;
 import pw.fusionmine.fusioncases.animation.api.AnimationManager;
 import pw.fusionmine.fusioncases.animation.api.AnimationSession;
 import pw.fusionmine.fusioncases.case_system.CaseGuiHolder;
+import pw.fusionmine.fusioncases.case_system.CaseGuiManager;
 import pw.fusionmine.fusioncases.case_system.CaseManager;
 import pw.fusionmine.fusioncases.case_system.CaseModel;
 
@@ -39,10 +39,12 @@ public class CaseListener implements Listener {
     public CaseListener(FusionCases plugin) {
         this.plugin = plugin;
         this.caseManager = plugin.getCaseManager();
+        this.caseGuiManager = plugin.getCaseGuiManager();
         this.animationManager = plugin.getAnimationManager();
     }
 
     private final CaseManager caseManager;
+    private final CaseGuiManager caseGuiManager;
     private final AnimationManager animationManager;
 
     private void msg(Player p, String key, String... repls) {
@@ -70,22 +72,22 @@ public class CaseListener implements Listener {
             e.setCancelled(true);
             CaseModel caseModel = this.caseManager.getCase(caseName);
             if (caseModel == null) {
-                msg(p, "case-not-configured", new String[0]);
+                msg(p, "case-not-configured");
                 return;
             }
             if (this.caseManager.isCaseDisabled(caseName)) {
-                msg(p, "case-disabled", new String[0]);
+                msg(p, "case-disabled");
                 return;
             }
             if (this.animationManager.getSessionByPlayer(p.getUniqueId()) != null) {
-                msg(p, "already-opening", new String[0]);
+                msg(p, "already-opening");
                 return;
             }
             if (this.animationManager.isLocationActive(loc)) {
-                msg(p, "already-opened-by-other", new String[0]);
+                msg(p, "already-opened-by-other");
                 return;
             }
-            this.caseManager.openGui(p, caseModel, loc);
+            this.caseGuiManager.openGui(p, caseModel, loc);
         }
     }
 
@@ -114,17 +116,17 @@ public class CaseListener implements Listener {
                         p.closeInventory();
 
                         if (this.caseManager.isCaseDisabled(targetCaseModel.getName())) {
-                            msg(p, "case-disabled", new String[0]);
+                            msg(p, "case-disabled");
                             return;
                         }
 
                         if (this.animationManager.getSessionByPlayer(p.getUniqueId()) != null) {
-                            msg(p, "already-opening", new String[0]);
+                            msg(p, "already-opening");
                             return;
                         }
 
                         if (this.animationManager.isLocationActive(loc)) {
-                            msg(p, "already-opened-by-other", new String[0]);
+                            msg(p, "already-opened-by-other");
                             return;
                         }
 
@@ -138,34 +140,34 @@ public class CaseListener implements Listener {
                             boolean started = this.animationManager.startAnimation(p, loc, targetCaseModel);
                             if (!started) {
                                 this.caseManager.addKeys(p.getUniqueId(), targetCaseModel.getName(), 1);
-                                msg(p, "animation-start-failed", new String[0]);
+                                msg(p, "animation-start-failed");
                             }
                         } else {
-                            msg(p, "no-keys", new String[0]);
+                            msg(p, "no-keys");
                         }
 
                         return;
                     }
                 }
             }
-            String action = this.caseManager.getActionAtSlot(caseModel, slot);
+            String action = this.caseGuiManager.getActionAtSlot(caseModel, slot);
             if (action != null && action.equalsIgnoreCase("start")) {
                 p.closeInventory();
                 if (this.caseManager.isCaseDisabled(caseModel.getName())) {
-                    msg(p, "case-disabled", new String[0]);
+                    msg(p, "case-disabled");
                     return;
                 }
                 if (this.animationManager.getSessionByPlayer(p.getUniqueId()) != null) {
-                    msg(p, "already-opening", new String[0]);
+                    msg(p, "already-opening");
                     return;
                 }
                 if (this.animationManager.isLocationActive(loc)) {
-                    msg(p, "already-opened-by-other", new String[0]);
+                    msg(p, "already-opened-by-other");
                     return;
                 }
                 int keys = this.caseManager.getKeys(p.getUniqueId(), caseModel.getName());
                 if (keys <= 0) {
-                    msg(p, "no-keys", new String[0]);
+                    msg(p, "no-keys");
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 1.0F, 1.0F);
                     return;
                 }
@@ -173,14 +175,13 @@ public class CaseListener implements Listener {
                     boolean started = this.animationManager.startAnimation(p, loc, caseModel);
                     if (!started) {
                         this.caseManager.addKeys(p.getUniqueId(), caseModel.getName(), 1);
-                        msg(p, "animation-start-failed", new String[0]);
+                        msg(p, "animation-start-failed");
                     }
                 } else {
-                    msg(p, "no-keys", new String[0]);
+                    msg(p, "no-keys");
                 }
             }
         }
-
     }
 
     @EventHandler

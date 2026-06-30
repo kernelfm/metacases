@@ -1,34 +1,25 @@
 package pw.fusionmine.fusioncases.case_system;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
-import com.destroystokyo.paper.profile.PlayerProfile;
-import com.destroystokyo.paper.profile.ProfileProperty;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 import pw.fusionmine.fusioncases.FusionCases;
 import pw.fusionmine.fusioncases.animation.api.AnimationConfig;
 import pw.fusionmine.fusioncases.database.DatabaseManager;
 import pw.fusionmine.fusioncases.hologram.HologramBridge;
 import pw.fusionmine.fusioncases.utility.ColorUtil;
-import pw.fusionmine.fusioncases.utility.ItemUtil;
 
 public class CaseManager {
 
     private final Map<String, CaseModel> cases = new HashMap<>();
-    private final FusionCases plugin;
+    public final FusionCases plugin;
     private final Map<Location, String> caseBlocks = new HashMap<>();
     private final Map<UUID, Map<String, Integer>> playerKeys = new HashMap<>();
-    private List<HistoryEntry> history = new ArrayList<>();
+    public List<HistoryEntry> history = new ArrayList<>();
     private final Map<Location, String> blockHolos = new HashMap<>();
     private final Set<String> disabledCases = new HashSet<>();
 
@@ -292,166 +283,6 @@ public class CaseManager {
         this.blockHolos.clear();
     }
 
-    public String formatPlaceholders(String text, Player p, CaseModel cm) {
-        if (text == null) return null;
-        int keys = getKeys(p.getUniqueId(), cm.getName());
-        int allKeys = 0;
-        for (CaseModel c : getCases()) allKeys += getKeys(p.getUniqueId(), c.getName());
-        return ColorUtil.color(text
-                .replace("%keys%", String.valueOf(keys))
-                .replace("%all_keys%", String.valueOf(allKeys))
-                .replace("%case_display_name%", cm.getDisplayName())
-                .replace("%username%", p.getName()));
-    }
-
-    public String getActionAtSlot(CaseModel cm, int slot) {
-        ConfigurationSection gui = cm.getGuiConfig();
-        if (gui == null) return null;
-        List<?> items = gui.getList("items");
-        if (items == null) return null;
-
-        for (Object obj : items) {
-            if (!(obj instanceof Map))
-                continue;
-            Map<?, ?> map = (Map<?, ?>) obj;
-            List<?> slots = (List) map.get("slots");
-            if (slots != null && slots.contains(Integer.valueOf(slot))) return (String) map.get("action");
-            Object single = map.get("slot");
-            if (single instanceof Number && ((Number) single).intValue() == slot) return (String) map.get("action");
-        }
-        return null;
-    }
-
-    public void openGui(Player p, CaseModel cm, Location loc) {
-        ConfigurationSection gui = cm.getGuiConfig();
-        int rows = (gui != null) ? gui.getInt("rows", 6) : 6;
-        String rawTitle = (gui != null) ? gui.getString("title", "&aКейс: %case_display_name%") : "&aКейс: %case_display_name%";
-        String title = formatPlaceholders(rawTitle, p, cm);
-
-        Inventory inv = Bukkit.createInventory(new CaseGuiHolder(cm, loc), rows * 9, title);
-
-        if (gui != null) {
-            List<?> itemsList = gui.getList("items");
-            if (itemsList != null) {
-                List<CaseModel> playerCases = new ArrayList<>();
-                for (CaseModel c : getCases()) {
-                    int amount = getKeys(p.getUniqueId(), c.getName());
-                    for (int i = 0; i < amount; i++) {
-                        playerCases.add(c);
-                    }
-                }
-
-                playerCases.sort(Comparator.comparing(CaseModel::getName));
-                int caseIndex = 0;
-
-                for (Object obj : itemsList) {
-                    if (!(obj instanceof Map))
-                        continue;
-                    Map<?, ?> map = (Map<?, ?>) obj;
-
-                    List<Integer> slotsList = new ArrayList<>();
-                    List<?> slots = (List) map.get("slots");
-                    if (slots != null) {
-                        for (Object so : slots) {
-                            if (so instanceof Number) {
-                                slotsList.add(Integer.valueOf(((Number) so).intValue()));
-                                continue;
-                            }
-                            if (so != null) {
-                                try {
-                                    slotsList.add(Integer.valueOf(Integer.parseInt(so.toString().trim())));
-                                } catch (NumberFormatException numberFormatException) {}
-                            }
-                        }
-                    }
-
-                    Object single = map.get("slot");
-                    if (single instanceof Number) {
-                        slotsList.add(Integer.valueOf(((Number) single).intValue()));
-                    } else if (single != null) {
-                        try {
-                            slotsList.add(Integer.valueOf(Integer.parseInt(single.toString().trim())));
-                        } catch (NumberFormatException numberFormatException) {}
-                    }
-
-                    String type = (String) map.get("type");
-                    ItemStack stack = null;
-
-                    if (type != null && type.equals("case")) {
-                        for (Iterator<Integer> iterator = slotsList.iterator(); iterator.hasNext(); ) {
-                            int sl = (iterator.next()).intValue();
-                            if (sl >= 0 && sl < rows * 9 && caseIndex < playerCases.size()) {
-                                CaseModel targetCase = playerCases.get(caseIndex);
-                                ItemStack caseStack = createCaseItem(targetCase, p, cm, map);
-                                inv.setItem(sl, caseStack);
-                                caseIndex++;
-                            }
-                        }
-                    } else if (type != null && type.startsWith("history-")) {
-                        try {
-                            int idx = Integer.parseInt(type.substring(8)) - 1;
-                            if (idx >= 0 && idx < history.size()) {
-                                HistoryEntry entry = history.get(idx);
-                                stack = ItemUtil.getItem(entry.getRewardMaterial(), Material.PAPER);
-                                ItemMeta meta = stack.getItemMeta();
-                                if (meta != null) {
-                                    List<String> wonLore = new ArrayList<>();
-                                    for(String s : plugin.getLangManager().getStringList("gui-history-won")) {
-                                        s = s
-                                        .replace("%time%", entry.getTime())
-                                        .replace("%reward%", entry.getRewardDisplayName());
-                                        wonLore.add(ColorUtil.color(s));
-                                    }
-                                    String playerColor = this.plugin.getLangManager().get("gui-history-player-color");
-                                    meta.setDisplayName(ColorUtil.color(playerColor + entry.getUsername()));
-                                    meta.setLore(wonLore);
-                                    stack.setItemMeta(meta);
-                                }
-                            } else {
-                                stack = new ItemStack(Material.BARRIER);
-                                ItemMeta meta = stack.getItemMeta();
-                                if (meta != null) {
-                                    meta.setDisplayName(ColorUtil.color(this.plugin.getMsg("gui-history-empty", new String[0])));
-                                    stack.setItemMeta(meta);
-                                }
-                            }
-                        } catch (NumberFormatException numberFormatException) {}
-                    } else {
-                        String matStr = (String) map.get("material");
-                        if (matStr != null) {
-                            Material mat = Material.matchMaterial(matStr);
-                            if (mat != null) {
-                                stack = new ItemStack(mat);
-                                ItemMeta meta = stack.getItemMeta();
-                                if (meta != null) {
-                                    String dn = (String) map.get("name");
-                                    if (dn != null) meta.setDisplayName(formatPlaceholders(dn, p, cm));
-                                    List<?> lore = (List) map.get("lore");
-                                    if (lore != null) {
-                                        List<String> colored = new ArrayList<>();
-                                        for (Object line : lore)
-                                            colored.add(formatPlaceholders(line.toString(), p, cm));
-                                        meta.setLore(colored);
-                                    }
-                                    stack.setItemMeta(meta);
-                                }
-                            }
-                        }
-                    }
-
-                    if (stack != null) {
-                        for (Iterator<Integer> iterator = slotsList.iterator(); iterator.hasNext(); ) {
-                            int sl = (iterator.next()).intValue();
-                            if (sl >= 0 && sl < rows * 9) inv.setItem(sl, stack);
-                        }
-
-                    }
-                }
-            }
-        }
-        p.openInventory(inv);
-    }
-
     private String serializeLoc(Location loc) {
         return loc.getWorld().getName() + "," + loc.getWorld().getName() + "," + loc.getBlockX() + "," + loc.getBlockY();
     }
@@ -482,38 +313,6 @@ public class CaseManager {
 
     public void enableCase(String caseName) {
         this.disabledCases.remove(caseName.toLowerCase());
-    }
-
-    private ItemStack createCaseItem(CaseModel targetCase, Player p, CaseModel openCase, Map<?, ?> guiItemMap) {
-        String customMat = (guiItemMap != null) ? (String) guiItemMap.get("material") : null;
-        String matStr = (customMat != null) ? customMat : targetCase.getMaterial();
-        ItemStack stack = ItemUtil.getItem(matStr, Material.CHEST);
-
-        ItemMeta meta = stack.getItemMeta();
-        if (meta != null) {
-            String customName = (guiItemMap != null) ? (String) guiItemMap.get("name") : null;
-            if (customName != null) {
-                meta.setDisplayName(formatPlaceholders(customName, p, targetCase));
-            } else {
-                meta.setDisplayName(formatPlaceholders(targetCase.getDisplayName(), p, targetCase));
-            }
-            List<?> customLore = (guiItemMap != null) ? (List) guiItemMap.get("lore") : null;
-            if (customLore != null) {
-                List<String> colored = new ArrayList<>();
-                for (Object line : customLore) {
-                    colored.add(formatPlaceholders(line.toString(), p, targetCase));
-                }
-                meta.setLore(colored);
-            } else {
-                List<String> lore = Collections.singletonList(ColorUtil.color(this.plugin.getMsg("gui-case-lore")
-                        .replace("%keys%", String.valueOf(getKeys(p.getUniqueId(), targetCase.getName())))));
-                meta.setLore(lore);
-            }
-            NamespacedKey key = new NamespacedKey(this.plugin, "case_name");
-            meta.getPersistentDataContainer().set(key, PersistentDataType.STRING, targetCase.getName());
-            stack.setItemMeta(meta);
-        }
-        return stack;
     }
 
 }

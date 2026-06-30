@@ -1,6 +1,8 @@
 package pw.fusionmine.fusioncases;
 
 import java.io.File;
+
+import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 import pw.fusionmine.fusioncases.animation.impl.bees.BeesAnimation;
 import pw.fusionmine.fusioncases.animation.api.AnimationManager;
@@ -10,6 +12,7 @@ import pw.fusionmine.fusioncases.animation.impl.piglins.PiglinsAnimation;
 import pw.fusionmine.fusioncases.animation.impl.shulkers.ShulkersAnimation;
 import pw.fusionmine.fusioncases.animation.impl.soulwell.SoulWellAnimation;
 import pw.fusionmine.fusioncases.animation.impl.tnt.TntAnimation;
+import pw.fusionmine.fusioncases.case_system.CaseGuiManager;
 import pw.fusionmine.fusioncases.case_system.CaseManager;
 import pw.fusionmine.fusioncases.command.CaseCommand;
 import pw.fusionmine.fusioncases.hologram.HologramBridge;
@@ -17,9 +20,12 @@ import pw.fusionmine.fusioncases.listener.CaseListener;
 import pw.fusionmine.fusioncases.utility.ColorUtil;
 import pw.fusionmine.fusioncases.utility.LangManager;
 
+@Getter
 public final class FusionCases extends JavaPlugin {
 
     private CaseManager caseManager;
+
+    private CaseGuiManager caseGuiManager;
 
     private AnimationManager animationManager;
 
@@ -30,6 +36,7 @@ public final class FusionCases extends JavaPlugin {
 
         this.langManager = new LangManager(this);
         this.caseManager = new CaseManager(this);
+        this.caseGuiManager = new CaseGuiManager(this.caseManager);
         this.animationManager = new AnimationManager(this);
 
         registerAnimationIfFileExists(this.animationManager, "chests", new ChestsAnimation(this));
@@ -58,18 +65,6 @@ public final class FusionCases extends JavaPlugin {
                 this.caseManager.getDatabaseManager().close();
             }
         }
-    }
-
-    public CaseManager getCaseManager() {
-        return this.caseManager;
-    }
-
-    public AnimationManager getAnimationManager() {
-        return this.animationManager;
-    }
-
-    public LangManager getLangManager() {
-        return this.langManager;
     }
 
     public String getMsg(String key, String... repls) {
