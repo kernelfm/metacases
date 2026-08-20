@@ -1,12 +1,13 @@
-name: FusionCases
+name: MetaCasesFree
 version: '${version}'
-main: pw.fusionmine.fusioncases.FusionCases
+main: fun.metaproject.metaCases.MetaCasesFree
 api-version: '1.21'
+prefix: MetaCases Free
 authors:
-  - "shk3d"
-  - "Skr4tch (TG: skr4tch)"
+  - "MetaProject"
 softdepend: [FancyHolograms]
 commands:
-  fusioncases:
+  metacases:
     description: Main plugin command
-    permission: fusioncases.use
+    permission: metacases.use
+    aliases: [metacasesfree, mcases, mc]

@@ -1,6 +1,3 @@
-# FusionCases - English language file
-# Edit messages here. Color codes use & or &#RRGGBB hex format.
-
 messages:
   no-permission: "&cYou don't have permission to do that."
   only-players: "&cOnly players can use this command!"
@@ -9,7 +6,7 @@ messages:
   already-opened-by-other: "&cThis case is already being opened by another player!"
   no-keys: "&cYou don't have a key for this case!"
   animation-start-failed: "&cFailed to start the animation. Your key has been returned."
-  cannot-break: "&cYou cannot break a case block! Use &e/fusioncases remove &cto delete it."
+  cannot-break: "&cYou cannot break a case block! Use &e/metacases remove &cto delete it."
   case-disabled: "&cThis case is temporarily disabled by an administrator!"
   player-not-found: "&cPlayer not found!"
   invalid-amount: "&cInvalid amount specified!"
@@ -36,27 +33,26 @@ messages:
   reload-success: "&aConfig, cases, holograms and addons have been reloaded!"
   look-at-block: "&cYou must be looking at a block!"
   case-config-not-found: "&cCase &e%case% &cnot found!"
-  set-usage: "&cSpecify a case name: &e/fusioncases set <case>"
-  givekey-usage: "&cSpecify parameters: &e/fusioncases givekey <player> <case> <amount>"
-  takekeys-usage: "&cSpecify parameters: &e/fusioncases takekeys <player> <case> <amount>"
-  infoplayer-usage: "&cSpecify parameters: &e/fusioncases infoplayer <player>"
-  giveall-usage: "&cSpecify parameters: &e/fusioncases giveall <case> <amount>"
-  on-usage: "&cSpecify parameters: &e/fusioncases on <case>"
-  off-usage: "&cSpecify parameters: &e/fusioncases off <case>"
+  set-usage: "&cSpecify a case name: &e/metacases set <case>"
+  givekey-usage: "&cSpecify parameters: &e/metacases givekey <player> <case> <amount>"
+  takekeys-usage: "&cSpecify parameters: &e/metacases takekeys <player> <case> <amount>"
+  infoplayer-usage: "&cSpecify parameters: &e/metacases infoplayer <player>"
+  giveall-usage: "&cSpecify parameters: &e/metacases giveall <case> <amount>"
+  on-usage: "&cSpecify parameters: &e/metacases on <case>"
+  off-usage: "&cSpecify parameters: &e/metacases off <case>"
 
-  help-header: "&#FF8C00&lFusionCases &7» &fAvailable commands:"
-  help-item-keys: " &#FF8C00● &#FFD700/fusioncases keys &f- view your keys"
-  help-item-set: " &#FF8C00● &#FFD700/fusioncases set <case> &f- bind a case to a block"
-  help-item-delete: " &#FF8C00● &#FFD700/fusioncases delete <name> &f- remove a case from a block"
-  help-item-givekey: " &#FF8C00● &#FFD700/fusioncases givekey <player> <case> <amount> &f- give keys"
-  help-item-takekeys: " &#FF8C00● &#FFD700/fusioncases takekeys <player> <case> <amount> &f- take keys"
-  help-item-infoplayer: " &#FF8C00● &#FFD700/fusioncases infoplayer <player> &f- view player's keys"
-  help-item-giveall: " &#FF8C00● &#FFD700/fusioncases giveall <case> <amount> &f- give keys to all online players"
-  help-item-on: " &#FF8C00● &#FFD700/fusioncases on <case> &f- enable a case"
-  help-item-off: " &#FF8C00● &#FFD700/fusioncases off <case> &f- temporarily disable a case"
-  help-item-reload: " &#FF8C00● &#FFD700/fusioncases reload &f- reload the configuration"
+  help-header: "&#FF8C00&lMetaCases Free &7» &fAvailable commands:"
+  help-item-keys: " &#FF8C00● &#FFD700/metacases keys &f- view your keys"
+  help-item-set: " &#FF8C00● &#FFD700/metacases set <case> &f- bind a case to a block"
+  help-item-delete: " &#FF8C00● &#FFD700/metacases delete <name> &f- remove a case from a block"
+  help-item-givekey: " &#FF8C00● &#FFD700/metacases givekey <player> <case> <amount> &f- give keys"
+  help-item-takekeys: " &#FF8C00● &#FFD700/metacases takekeys <player> <case> <amount> &f- take keys"
+  help-item-infoplayer: " &#FF8C00● &#FFD700/metacases infoplayer <player> &f- view player's keys"
+  help-item-giveall: " &#FF8C00● &#FFD700/metacases giveall <case> <amount> &f- give keys to all online players"
+  help-item-on: " &#FF8C00● &#FFD700/metacases on <case> &f- enable a case"
+  help-item-off: " &#FF8C00● &#FFD700/metacases off <case> &f- temporarily disable a case"
+  help-item-reload: " &#FF8C00● &#FFD700/metacases reload &f- reload the configuration"
 
-  # Animation title/subtitle messages
   chest-title: "§aChoose a chest!"
   chest-subtitle: "§7Left-click any chest"
   piglin-title: "§aChoose a piglin!"
@@ -66,7 +62,6 @@ messages:
   soulwell-title: "§aChoose a skull!"
   soulwell-subtitle: "§7Left-click any skull"
 
-  # GUI messages (hardcoded strings in the case GUI)
   gui-history-player-color: "&a"
   gui-history-won:
     - "&7Won: %reward%"

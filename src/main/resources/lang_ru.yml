@@ -1,6 +1,3 @@
-# FusionCases - Русский языковой файл
-# Редактируйте сообщения здесь. Цвета задаются через & или &#RRGGBB (hex).
-
 messages:
   no-permission: "&cНедостаточно прав для выполнения команды."
   only-players: "&cЭту команду могут использовать только игроки!"
@@ -9,7 +6,7 @@ messages:
   already-opened-by-other: "&cЭтот кейс уже открывается другим игроком!"
   no-keys: "&cУ вас нет ключей для этого кейса!"
   animation-start-failed: "&cНе удалось запустить анимацию. Ключ возвращен."
-  cannot-break: "&cВы не можете сломать кейс! Используйте &e/fusioncases remove &cдля его удаления."
+  cannot-break: "&cВы не можете сломать кейс! Используйте &e/metacases remove &cдля его удаления."
   case-disabled: "&cЭтот кейс временно отключен администрацией!"
   player-not-found: "&cИгрок не найден!"
   invalid-amount: "&cУказано неверное количество!"
@@ -36,27 +33,26 @@ messages:
   reload-success: "&aКонфигурация, кейсы, голограммы и аддоны перезагружены!"
   look-at-block: "&cВы должны смотреть на блок!"
   case-config-not-found: "&cКейс &e%case% &cне найден!"
-  set-usage: "&cУкажите название кейса: &e/fusioncases set <case>"
-  givekey-usage: "&cУкажите параметры: &e/fusioncases givekey <player> <case> <amount>"
-  takekeys-usage: "&cУкажите параметры: &e/fusioncases takekeys <player> <case> <amount>"
-  infoplayer-usage: "&cУкажите параметры: &e/fusioncases infoplayer <player>"
-  giveall-usage: "&cУкажите параметры: &e/fusioncases giveall <case> <amount>"
-  on-usage: "&cУкажите параметры: &e/fusioncases on <case>"
-  off-usage: "&cУкажите параметры: &e/fusioncases off <case>"
+  set-usage: "&cУкажите название кейса: &e/metacases set <case>"
+  givekey-usage: "&cУкажите параметры: &e/metacases givekey <player> <case> <amount>"
+  takekeys-usage: "&cУкажите параметры: &e/metacases takekeys <player> <case> <amount>"
+  infoplayer-usage: "&cУкажите параметры: &e/metacases infoplayer <player>"
+  giveall-usage: "&cУкажите параметры: &e/metacases giveall <case> <amount>"
+  on-usage: "&cУкажите параметры: &e/metacases on <case>"
+  off-usage: "&cУкажите параметры: &e/metacases off <case>"
 
-  help-header: "&#FF8C00&lFusionCases &7» &fДоступные команды:"
-  help-item-keys: " &#FF8C00● &#FFD700/fusioncases keys &f- посмотреть свои ключи"
-  help-item-set: " &#FF8C00● &#FFD700/fusioncases set <кейс> &f- привязать кейс к блоку"
-  help-item-delete: " &#FF8C00● &#FFD700/fusioncases delete <название> &f- удалить кейс с блока"
-  help-item-givekey: " &#FF8C00● &#FFD700/fusioncases givekey <игрок> <кейс> <кол-во> &f- выдать ключи"
-  help-item-takekeys: " &#FF8C00● &#FFD700/fusioncases takekeys <игрок> <кейс> <кол-во> &f- забрать ключи"
-  help-item-infoplayer: " &#FF8C00● &#FFD700/fusioncases infoplayer <игрок> &f- информация о ключах игрока"
-  help-item-giveall: " &#FF8C00● &#FFD700/fusioncases giveall <кейс> <кол-во> &f- выдать ключи всем в сети"
-  help-item-on: " &#FF8C00● &#FFD700/fusioncases on <кейс> &f- включить кейс"
-  help-item-off: " &#FF8C00● &#FFD700/fusioncases off <кейс> &f- временно отключить кейс"
-  help-item-reload: " &#FF8C00● &#FFD700/fusioncases reload &f- перезагрузить конфигурацию"
+  help-header: "&#FF8C00&lMetaCases Free &7» &fДоступные команды:"
+  help-item-keys: " &#FF8C00● &#FFD700/metacases keys &f- посмотреть свои ключи"
+  help-item-set: " &#FF8C00● &#FFD700/metacases set <кейс> &f- привязать кейс к блоку"
+  help-item-delete: " &#FF8C00● &#FFD700/metacases delete <название> &f- удалить кейс с блока"
+  help-item-givekey: " &#FF8C00● &#FFD700/metacases givekey <игрок> <кейс> <кол-во> &f- выдать ключи"
+  help-item-takekeys: " &#FF8C00● &#FFD700/metacases takekeys <игрок> <кейс> <кол-во> &f- забрать ключи"
+  help-item-infoplayer: " &#FF8C00● &#FFD700/metacases infoplayer <игрок> &f- информация о ключах игрока"
+  help-item-giveall: " &#FF8C00● &#FFD700/metacases giveall <кейс> <кол-во> &f- выдать ключи всем в сети"
+  help-item-on: " &#FF8C00● &#FFD700/metacases on <кейс> &f- включить кейс"
+  help-item-off: " &#FF8C00● &#FFD700/metacases off <кейс> &f- временно отключить кейс"
+  help-item-reload: " &#FF8C00● &#FFD700/metacases reload &f- перезагрузить конфигурацию"
 
-  # Сообщения тайтлов анимаций
   chest-title: "§aВыбери сундук!"
   chest-subtitle: "§7Нажми ЛКМ по любому сундуку"
   piglin-title: "§aВыбери пиглина!"
@@ -66,7 +62,6 @@ messages:
   soulwell-title: "§aВыбери череп!"
   soulwell-subtitle: "§7Нажми ЛКМ по любому черепу"
 
-  # Строки GUI (захардкоженные в интерфейсе кейса)
   gui-history-player-color: "&a"
   gui-history-won:
     - "&7Выбил: %reward%"

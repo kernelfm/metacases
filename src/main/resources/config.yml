@@ -1,10 +1,10 @@
 locale: ru
 
-prefix: "&#FF8C00&lFusionCases &7» &f"
+prefix: "&#FF8C00&lMetaCases Free &7» &f"
 
 permissions:
-  use: "fusioncases.use"
-  admin: "fusioncases.admin"
+  use: "metacases.use"
+  admin: "metacases.admin"
 
 fancy-holograms:
   case:
